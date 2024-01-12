@@ -1,12 +1,17 @@
 package com.j62u63310.springbootmall.dao.impl;
 
 import com.j62u63310.springbootmall.dao.ProductDao;
+import com.j62u63310.springbootmall.dto.ProductRequest;
 import com.j62u63310.springbootmall.model.Product;
 import com.j62u63310.springbootmall.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +32,29 @@ public class ProductDaoImpl implements ProductDao {
 
         if(!productList.isEmpty()) return productList.get(0);
         else return null;
+    }
+
+    @Override
+    public Integer createProduct(ProductRequest productRequest) {
+        String sql = "INSERT INTO product (product_name, category, image_url, price, stock, description, created_date, last_modified_date) " +
+                "VALUES (:productName, :category, :imageUrl, :price, :stock, :description, :createdDate, :lastModifiedDate)";
+
+        Date date = new Date();
+        Map<String ,Object> map = new HashMap<>();
+        map.put("productName",productRequest.getProductName());
+        map.put("category",productRequest.getCategory().toString());
+        map.put("imageUrl",productRequest.getImageUrl());
+        map.put("price",productRequest.getPrice());
+        map.put("stock",productRequest.getStock());
+        map.put("description",productRequest.getDescription());
+        map.put("createdDate",date);
+        map.put("lastModifiedDate",date);
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(sql,new MapSqlParameterSource(map),keyHolder);
+
+
+        return keyHolder.getKey().intValue();
     }
 }
