@@ -1,6 +1,7 @@
 package com.j62u63310.springbootmall.controller;
 
 
+import com.j62u63310.springbootmall.constant.ProductCategory;
 import com.j62u63310.springbootmall.dto.ProductRequest;
 import com.j62u63310.springbootmall.model.Product;
 import com.j62u63310.springbootmall.service.ProductService;
@@ -20,9 +21,12 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProduct(){
-        List<Product> productList= productService.getProducts();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<List<Product>> getProduct(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search
+    ){
+        List<Product> productList= productService.getProducts(category,search);
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
     @GetMapping("/products/{productId}")
