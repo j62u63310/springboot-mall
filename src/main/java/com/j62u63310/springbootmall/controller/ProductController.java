@@ -56,7 +56,7 @@ public class ProductController {
         page.setLimit(limit);
         page.setOffset(offset);
         page.setTotal(total);
-        page.setResult(productList);
+        page.setResults(productList);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
@@ -95,6 +95,6 @@ public class ProductController {
         if(product==null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         productService.deleteProduct(productId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
